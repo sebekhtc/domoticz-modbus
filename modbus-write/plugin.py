@@ -209,7 +209,7 @@ class BasePlugin:
           Domoticz.Debug("MODBUS DEBUG - INTERFACE: IP="+self.Domoticz_Setting_TCP_IP+", Port="+self.Domoticz_Setting_TCP_PORT)
           Domoticz.Debug("MODBUS DEBUG - SETTINGS: Method="+self.Domoticz_Setting_Communication_Mode+", Device ID="+self.Domoticz_Setting_Device_ID+", Register="+self.Domoticz_Setting_Register_Number+", Function="+self.Domoticz_Setting_Modbus_Function+", Payload="+payload)
           try:
-            client = ModbusTcpClient(host=self.Domoticz_Setting_TCP_IP, port=int(self.Domoticz_Setting_TCP_PORT), framer=ModbusRtuFramer, auto_open=True, auto_close=True, timeout=2)
+            client = ModbusTcpClient(host=self.Domoticz_Setting_TCP_IP, port=int(self.Domoticz_Setting_TCP_PORT), framer=ModbusRtuFramer, timeout=2)
           except:
             Domoticz.Error("Error opening RTU over TCP interface on address: "+self.Domoticz_Setting_TCP_IPPORT)
             Devices[1].Update(1, "0") # Set value to 0 (error)
@@ -221,7 +221,7 @@ class BasePlugin:
           Domoticz.Debug("MODBUS DEBUG - INTERFACE: IP="+self.Domoticz_Setting_TCP_IP+", Port="+self.Domoticz_Setting_TCP_PORT)
           Domoticz.Debug("MODBUS DEBUG - SETTINGS: Method="+self.Domoticz_Setting_Communication_Mode+", Device ID="+self.Domoticz_Setting_Device_ID+", Register="+self.Domoticz_Setting_Register_Number+", Function"+self.Domoticz_Setting_Modbus_Function+", Payload="+payload)
           try:
-            client = ModbusClient(host=self.Domoticz_Setting_TCP_IP, port=int(self.Domoticz_Setting_TCP_PORT), unit_id=int(self.Domoticz_Setting_Device_ID), auto_open=True, auto_close=True, timeout=2)
+            client = ModbusClient(host=self.Domoticz_Setting_TCP_IP, port=int(self.Domoticz_Setting_TCP_PORT), unit_id=int(self.Domoticz_Setting_Device_ID), timeout=2)
           except:
             Domoticz.Error("Error opening TCP/IP interface on address: "+self.Domoticz_Setting_TCP_IPPORT)
             Devices[1].Update(1, "0") # Set value to 0 (error)
@@ -232,10 +232,10 @@ class BasePlugin:
         if (self.Domoticz_Setting_Communication_Mode == "rtu" or self.Domoticz_Setting_Communication_Mode == "ascii" or self.Domoticz_Setting_Communication_Mode == "rtutcp"):
           try:
             # Function to execute
-            if (self.Domoticz_Setting_Modbus_Function == "5"): result = client.write_coil(int(self.Domoticz_Setting_Register_Number), int(payload, 16), unit=int(self.Domoticz_Setting_Device_ID))
-            if (self.Domoticz_Setting_Modbus_Function == "6"): result = client.write_register(int(self.Domoticz_Setting_Register_Number), int(payload, 16), unit=int(self.Domoticz_Setting_Device_ID))
-            if (self.Domoticz_Setting_Modbus_Function == "15"): result = client.write_coils(int(self.Domoticz_Setting_Register_Number), int(payload, 16), unit=int(self.Domoticz_Setting_Device_ID))
-            if (self.Domoticz_Setting_Modbus_Function == "16"): result = client.write_registers(int(self.Domoticz_Setting_Register_Number), int(payload, 16), unit=int(self.Domoticz_Setting_Device_ID))
+            if (self.Domoticz_Setting_Modbus_Function == "5"): result = client.write_coil(int(self.Domoticz_Setting_Register_Number), int(payload, 16), slave=int(self.Domoticz_Setting_Device_ID))
+            if (self.Domoticz_Setting_Modbus_Function == "6"): result = client.write_register(int(self.Domoticz_Setting_Register_Number), int(payload, 16), slave=int(self.Domoticz_Setting_Device_ID))
+            if (self.Domoticz_Setting_Modbus_Function == "15"): result = client.write_coils(int(self.Domoticz_Setting_Register_Number), int(payload, 16), slave=int(self.Domoticz_Setting_Device_ID))
+            if (self.Domoticz_Setting_Modbus_Function == "16"): result = client.write_registers(int(self.Domoticz_Setting_Register_Number), int(payload, 16), slave=int(self.Domoticz_Setting_Device_ID))
             client.close()
 
             Domoticz.Debug("MODBUS DEBUG - RESULT: " + str(result))
